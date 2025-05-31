@@ -1,10 +1,30 @@
 <template>
   <dialog ref="imageModalDialog" class="modal">
     <div class="modal-box w-11/12 max-w-5xl p-4">
-      <img :src="props.imageUrl" alt="Detailed view" class="rounded-lg max-h-[80vh] w-auto mx-auto object-contain">
+      <template v-if="props.fileUrl">
+        <img
+          v-if="props.fileType === 'image'"
+          :src="props.fileUrl"
+          alt="Detailed view"
+          class="rounded-lg max-h-[80vh] w-auto mx-auto object-contain"
+        >
+        <embed
+          v-else-if="props.fileType === 'pdf'"
+          :src="props.fileUrl"
+          type="application/pdf"
+          class="w-full h-[80vh] rounded-lg"
+        >
+        <div v-else class="text-center p-8">
+          <p class="font-semibold">Unsupported file type</p>
+          <p class="text-sm text-gray-600">Cannot display this file: {{ props.fileUrl }}</p>
+        </div>
+      </template>
+      <div v-else class="text-center p-8">
+        <p class="font-semibold">No file specified</p>
+      </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button @click="handleClose">close</button>
+      <button @click="handleClose">close</button> <!-- This button is part of DaisyUI's modal closing mechanism -->
     </form>
   </dialog>
 </template>
@@ -17,15 +37,19 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-  imageUrl: {
+  fileUrl: { // Renamed from imageUrl
     type: String,
     required: true
+  },
+  fileType: { // Added new prop
+    type: String,
+    required: true // Assuming fileType is always provided when visible
   }
 });
 
 const emit = defineEmits(['close']);
 
-const imageModalDialog = ref(null);
+const imageModalDialog = ref(null); // Keep name generic as it now handles more than images
 
 watch(() => props.visible, (newVal) => {
   if (newVal) {
@@ -39,10 +63,8 @@ const handleClose = () => {
   emit('close');
 };
 
-// Optional: Listen for 'close' event on the dialog itself if user presses ESC
-// This is important because DaisyUI modals can be closed by ESC.
 const onDialogClose = () => {
-    if (props.visible) { // Only emit if programmatically visible
+    if (props.visible) {
         emit('close');
     }
 };
@@ -59,7 +81,3 @@ onBeforeUnmount(() => {
 });
 
 </script>
-
-<style scoped>
-/* All custom styles removed as they are handled by Tailwind/DaisyUI or are redundant. */
-</style>

@@ -3,12 +3,12 @@
     <li class="mb-4">
       <img src="/images/logo/logo.png" alt="Agridation Logo" class="w-40 mx-auto" />
     </li>
-    <li v-for="(item, idx) in sidebarStore.items" :key="item.label">
+    <li v-for="(item) in sidebarStore" :key="item.label">
       <router-link
         :to="item.link"
-        @click="sidebarStore.setActive(idx)"
-        class="btn btn-ghost justify-start w-full text-base font-medium"
-        active-class="btn-active btn-success"
+        class="btn btn-ghost justify-start w-full btn-success text-base font-medium"
+        active-class="btn-active"
+        exact-active-class="btn-active"
       >
         {{ item.label }}
       </router-link>
@@ -25,19 +25,15 @@
 import { useSidebarStore } from '../stores/sidebar';
 // import { useRouter } from 'vue-router'; // Uncomment if router.push is needed for logout
 
-const sidebarStore = useSidebarStore();
-// const router = useRouter(); // Uncomment if router.push is needed for logout
-
-const handleLogout = () => {
-  // Assuming sidebarStore.logout() handles the actual logout logic
-  // For example, clearing auth tokens from localStorage or a Pinia auth store
-  // And then redirecting to login:
-  // Option 1: If sidebarStore.logout handles redirection or emits an event handled by App.vue
-  sidebarStore.logout();
+const sidebarStore = [
+            { label: 'Dashboard',  link: '/dashboard' },
+            { label: 'Submissions',  link: '/submissions' },
+            { label: 'Profile',  link: '/profile' }
+        ]; // Use the store directly if it's a simple static list
 
   // Option 2: Programmatic navigation if logout doesn't handle it
   // router.push('/login');
   // Make sure to handle cases where router might not be available during logout (e.g., if store is outside Vue context fully)
   // A common pattern is for the store action to simply clear state, and a watcher in App.vue or a navigation guard handles redirect.
-};
+//};
 </script>

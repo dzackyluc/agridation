@@ -5,7 +5,6 @@ export const useSidebarStore = defineStore('sidebar', {
         items: [
             { label: 'Dashboard',  link: '/dashboard' },
             { label: 'Submissions',  link: '/submissions' },
-            { label: 'Admin Validation', link: '/admin/validation' },
             { label: 'Profile',  link: '/profile' }
         ],
         activeIndex: 0
