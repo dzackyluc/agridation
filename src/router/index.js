@@ -8,6 +8,7 @@ const SignUp = () => import('@/views/Auth/SignUp.vue')
 const NotFound = () => import('@/views/Content/404NotFound.vue')
 const Dashboard = () => import('@/views/Layout/Dashboard.vue')
 const Home = () => import('@/views/Content/Home.vue')
+const AdminValidationPage = () => import('@/views/Admin/AdminValidationPage.vue')
 
 const routes = [
     {
@@ -33,6 +34,11 @@ const routes = [
                 path: '',
                 name: 'Home',
                 component: Home
+            },
+            {
+                path: '/admin/validation',
+                name: 'AdminValidationPage',
+                component: AdminValidationPage
             }
         ]
     },
