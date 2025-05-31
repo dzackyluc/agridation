@@ -1,5 +1,40 @@
-# Vue 3 + Vite
+# Agridation Admin Dashboard
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Agridation is a web-based admin dashboard designed to manage and oversee the Agridation competition. This platform streamlines the administration of multiple competition categories, including:
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+- **Business Plan**
+- **Creative Video**
+- **Infographic**
+- **Debate**
+- **LKTI (Scientific Writing Competition)**
+
+## Features
+
+- Participant management for all competition categories
+- Submission tracking and review
+- Judge assignment and scoring
+- Real-time status updates
+
+## Tech Stack
+
+- **Vue 3** with `<script setup>` SFCs
+- **Vite** for fast development and build
+
+## Getting Started
+
+1. Clone the repository.
+2. Install dependencies:  
+    ```bash
+    npm install
+    ```
+3. Start the development server:  
+    ```bash
+    npm run dev
+    ```
+
+## Learn More
+
+- [Vue 3 Documentation](https://vuejs.org/)
+- [Vite Documentation](https://vitejs.dev/)
+
+For questions or support, please contact the Agridation admin team.
