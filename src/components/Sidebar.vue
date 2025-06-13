@@ -25,6 +25,6 @@
 const sidebarStore = [
             { label: 'Dashboard',  link: '/dashboard' },
             { label: 'Personal Validations',  link: '/personal-validations' },
-            { label: 'Profile',  link: '/profile' }
+            { label: 'Team Validations',  link: '/team-validations' }
         ]; // Use the store directly if it's a simple static list
 </script>

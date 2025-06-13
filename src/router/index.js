@@ -9,6 +9,7 @@ const NotFound = () => import('@/views/Content/404NotFound.vue')
 const Dashboard = () => import('@/views/Layout/Dashboard.vue')
 const Home = () => import('@/views/Content/Home.vue')
 const PersonalValidations = () => import('@/views/Content/PersonalValidations.vue')
+const TeamValidations = () => import('@/views/Content/TeamValidations.vue')
 
 const routes = [
     {
@@ -39,6 +40,11 @@ const routes = [
                 path: '/personal-validations',
                 name: 'PersonalValidations',
                 component: PersonalValidations
+            },
+            {
+                path: '/team-validations',
+                name: 'TeamValidations',
+                component: TeamValidations
             }
         ]
     },
