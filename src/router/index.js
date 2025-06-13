@@ -8,7 +8,7 @@ const SignUp = () => import('@/views/Auth/SignUp.vue')
 const NotFound = () => import('@/views/Content/404NotFound.vue')
 const Dashboard = () => import('@/views/Layout/Dashboard.vue')
 const Home = () => import('@/views/Content/Home.vue')
-const Submissions = () => import('@/views/Content/Submissions.vue')
+const PersonalValidations = () => import('@/views/Content/PersonalValidations.vue')
 
 const routes = [
     {
@@ -36,9 +36,9 @@ const routes = [
                 component: Home
             },
             {
-                path: '/submissions',
-                name: 'Submissions',
-                component: Submissions
+                path: '/personal-validations',
+                name: 'PersonalValidations',
+                component: PersonalValidations
             }
         ]
     },

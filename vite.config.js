@@ -12,4 +12,18 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://api.agridation.com',
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, '')
+    //   }
+    // },
+    allowedHosts: [
+      'localhost',
+      'great-distinctly-seasnail.ngrok-free.app'
+      // Add any other hosts you want to allow
+    ]
+  },
 })

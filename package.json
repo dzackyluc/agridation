@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
+    "@toast-ui/calendar": "^2.1.3",
     "agridation": "file:",
+    "axios": "^1.9.0",
     "daisyui": "^5.0.37",
     "pinia": "^3.0.2",
     "sweetalert2": "^11.22.0",

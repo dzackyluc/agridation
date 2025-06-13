@@ -22,18 +22,9 @@
 </template>
 
 <script setup>
-import { useSidebarStore } from '../stores/sidebar';
-// import { useRouter } from 'vue-router'; // Uncomment if router.push is needed for logout
-
 const sidebarStore = [
             { label: 'Dashboard',  link: '/dashboard' },
-            { label: 'Submissions',  link: '/submissions' },
+            { label: 'Personal Validations',  link: '/personal-validations' },
             { label: 'Profile',  link: '/profile' }
         ]; // Use the store directly if it's a simple static list
-
-  // Option 2: Programmatic navigation if logout doesn't handle it
-  // router.push('/login');
-  // Make sure to handle cases where router might not be available during logout (e.g., if store is outside Vue context fully)
-  // A common pattern is for the store action to simply clear state, and a watcher in App.vue or a navigation guard handles redirect.
-//};
 </script>

@@ -1,0 +1,56 @@
+import { defineStore } from 'pinia';
+import axios from 'axios';
+
+export const useRequirementStore = defineStore('requirement', {
+  state: () => ({
+    requirements: [],
+    loading: false,
+    error: null,
+  }),
+  actions: {
+    async fetchRequirements() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const res = await axios.get(
+          'https://api.agridation.com/api/panitia/users/getFileRequirements',
+          {
+            headers: {
+              Authorization: `bearer 7|DHxW4jqRHSPlBsBPYX7PYUaxvYcScn6my3nuCGUp24ff044c`
+            }
+          }
+        );
+        // Adjust if your API response structure is different
+        this.requirements = res.data.data.requirements;
+      } catch (err) {
+        this.error = err;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async updateRequirementAction(user_id, requirement_id, action, reason = null) {
+      const req = this.requirements.find(r => r.user_id === user_id);
+      if (!req) return;
+
+      try {
+        await axios.post(
+          `https://api.agridation.com/api/panitia/users/${user_id}/verify/${requirement_id}`,
+          {
+            "action": action,
+            "reason": reason,
+          },
+          {
+            headers: {
+              Authorization: `bearer 7|DHxW4jqRHSPlBsBPYX7PYUaxvYcScn6my3nuCGUp24ff044c`
+            }
+          }
+        ).then((response) => {
+          this.fetchRequirements();
+        });
+      } catch (err) {
+        this.error = err;
+        console.error(`Error updating requirement ${user_id}:`, err);
+      }
+    }
+  }
+});
