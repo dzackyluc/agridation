@@ -22,9 +22,22 @@
 </template>
 
 <script setup>
+import { useUsersStore } from '../stores/users';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const userStore = useUsersStore();
+
+const handleLogout = () => {
+    userStore.logout();
+    router.push('/login');
+};
+
 const sidebarStore = [
             { label: 'Dashboard',  link: '/dashboard' },
             { label: 'Personal Validations',  link: '/personal-validations' },
             { label: 'Team Validations',  link: '/team-validations' }
         ]; // Use the store directly if it's a simple static list
+
+
 </script>

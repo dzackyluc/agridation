@@ -17,7 +17,7 @@
                 </p>
               </div>
               <div>
-                <div class="sm:grid-cols-2 sm:gap-5">
+                <!-- <div class="sm:grid-cols-2 sm:gap-5">
                   <button
                   class="btn btn-ghost inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:text-gray-800 w-full"
                   >
@@ -57,7 +57,7 @@
                       >Or</span
                     >
                   </div>
-                </div>
+                </div> -->
                 <form @submit.prevent="handleSubmit">
                   <div class="space-y-5">
                     <!-- Email -->
@@ -193,7 +193,7 @@
                     </div>
                   </div>
                 </form>
-                <div class="mt-5">
+                <!-- <div class="mt-5">
                   <p
                     class="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start"
                   >
@@ -204,7 +204,7 @@
                       >Sign Up</router-link
                     >
                   </p>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -226,21 +226,35 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import { useUsersStore } from '@/stores/users' // adjust path if needed
+import { useRouter } from 'vue-router'
+
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const keepLoggedIn = ref(false)
 
+const usersStore = useUsersStore()
+const router = useRouter()
+
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
 
-const handleSubmit = () => {
-  // Handle form submission
-  console.log('Form submitted', {
-    email: email.value,
-    password: password.value,
-    keepLoggedIn: keepLoggedIn.value,
-  })
+const handleSubmit = async () => {
+  try {
+    const response = await axios.post('https://api.agridation.com/api/auth/login', {
+      email: email.value,
+      password: password.value,
+    })
+    // Assuming response.data contains { user, token }
+    usersStore.setCurrentUser(response.data.user, response.data.access_token)
+    // Optionally, redirect after login
+    router.push('/dashboard')
+  } catch (error) {
+    // Handle error (e.g., show error message)
+    console.error('Login failed:', error.response?.data || error.message)
+  }
 }
 </script>

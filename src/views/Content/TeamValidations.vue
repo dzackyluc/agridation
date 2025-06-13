@@ -2,11 +2,22 @@
   <div class="p-4 md:p-6 lg:p-8">
     <h1 class="text-2xl md:text-3xl font-bold mb-6 text-center">Team Payment Validations</h1>
     <div class="flex flex-wrap gap-4 justify-center mb-6">
+      <input
+        v-model="searchTeam"
+        type="text"
+        placeholder="Search by team name"
+        class="input input-bordered"
+        style="min-width: 220px"
+      />
       <select v-model="selectedStatus" class="select select-bordered">
         <option value="">All Status</option>
         <option value="pending">Pending</option>
-        <option value="verified">Verified</option>
+        <option value="accepted">Accepted</option>
         <option value="rejected">Rejected</option>
+      </select>
+      <select v-model="sortOrder" class="select select-bordered">
+        <option value="asc">Sort by Competition (A-Z)</option>
+        <option value="desc">Sort by Competition (Z-A)</option>
       </select>
     </div>
     <div>
@@ -18,11 +29,11 @@
       </div>
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
         <div
-          v-for="item in filteredTransactions"
+          v-for="item in sortedTransactions"
           :key="item.id"
           class="card bg-base-100 shadow-xl cursor-pointer border-4 transition-all"
           :class="{
-            'border-green-500': item.status === 'verified',
+            'border-green-500': item.status === 'accepted',
             'border-red-500': item.status === 'rejected',
             'border-base-200': item.status === 'pending'
           }"
@@ -42,13 +53,15 @@
             </template>
           </figure>
           <div class="card-body p-4">
-            <h2 class="card-title text-lg">Team ID: {{ item.team_id }}</h2>
-            <div class="text-sm text-gray-500">Transaction: {{ item.transaction_Unique_id }}</div>
+            <h2 class="card-title text-lg">
+              {{ item.team_name || (item.team && item.team.name) || 'Unknown Team' }}
+            </h2>
+            <div class="text-sm text-gray-500">Competition: {{ item.lomba_name || (item.team && item.team.competition && item.team.competition.name) || '-' }}</div>
             <div class="text-sm">Amount: <span class="font-bold text-primary">Rp {{ formatAmount(item.payment_amount) }}</span></div>
             <div class="text-xs mt-2">Status: <span class="capitalize">{{ item.status }}</span></div>
           </div>
         </div>
-        <div v-if="filteredTransactions.length === 0" class="col-span-full text-center text-gray-400 py-8">
+        <div v-if="sortedTransactions.length === 0" class="col-span-full text-center text-gray-400 py-8">
           No data found.
         </div>
       </div>
@@ -66,15 +79,35 @@ import LoadingSpinner from '@/components/Loading.vue';
 const store = useTeamTransactionStore();
 
 const selectedStatus = ref('');
+const sortOrder = ref('asc');
+const searchTeam = ref('');
 
 onMounted(() => {
   store.fetchTransactions();
 });
 
 const filteredTransactions = computed(() => {
-  return store.transactions.filter(item =>
-    selectedStatus.value ? item.status === selectedStatus.value : true
-  );
+  return store.transactions.filter(item => {
+    // Filter by status
+    const statusMatch = selectedStatus.value ? item.status === selectedStatus.value : true;
+    // Filter by team name (case-insensitive, supports both team_name and team.name)
+    const teamName = (item.team_name || (item.team && item.team.name) || '').toLowerCase();
+    const search = searchTeam.value.trim().toLowerCase();
+    const teamMatch = search ? teamName.includes(search) : true;
+    return statusMatch && teamMatch;
+  });
+});
+
+const sortedTransactions = computed(() => {
+  return [...filteredTransactions.value].sort((a, b) => {
+    const nameA = (a.lomba_name || (a.team && a.team.competition && a.team.competition.name) || '').toLowerCase();
+    const nameB = (b.lomba_name || (b.team && b.team.competition && b.team.competition.name) || '').toLowerCase();
+    if (sortOrder.value === 'asc') {
+      return nameA.localeCompare(nameB);
+    } else {
+      return nameB.localeCompare(nameA);
+    }
+  });
 });
 
 function isImage(url) {
@@ -88,7 +121,7 @@ function formatAmount(amount) {
 function showTransactionModal(item) {
   const isImg = isImage(item.payment_receipt_url);
   Swal.fire({
-    title: `Team ID: ${item.team_id}`,
+    title: `${item.team_name || (item.team && item.team.name) || 'Unknown Team'} - ${item.lomba_name || (item.team && item.team.competition && item.team.competition.name) || '-'}`,
     html: `
       <div class="mb-4">
         ${
@@ -105,7 +138,7 @@ function showTransactionModal(item) {
       ${item.payment_rejection_reason ? `<div class="mb-2 text-red-500"><b>Reason:</b> ${item.payment_rejection_reason}</div>` : ''}
     `,
     showCancelButton: item.status === 'pending',
-    confirmButtonText: item.status === 'pending' ? 'Approve' : 'OK',
+    confirmButtonText: item.status === 'pending' ? 'Accept' : 'OK',
     cancelButtonText: item.status === 'pending' ? 'Reject' : undefined,
     reverseButtons: true,
     customClass: {
@@ -116,8 +149,8 @@ function showTransactionModal(item) {
   }).then(async (result) => {
     if (item.status === 'pending') {
       if (result.isConfirmed) {
-        await store.updateTransactionStatus(item.id, 'verified');
-        Swal.fire('Approved!', '', 'success');
+        await store.updateTransactionStatus(item.id, 'accepted');
+        Swal.fire('Accepted!', '', 'success');
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Prompt for rejection reason
         const { value: reason } = await Swal.fire({

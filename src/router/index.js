@@ -1,10 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Example route components (replace with your actual components)
-// const Home = () => import('@/views/Home.vue')
-// const About = () => import('@/views/About.vue')
 const Login = () => import('@/views/Auth/SignIn.vue')
-const SignUp = () => import('@/views/Auth/SignUp.vue')
+// const SignUp = () => import('@/views/Auth/SignUp.vue')
 const NotFound = () => import('@/views/Content/404NotFound.vue')
 const Dashboard = () => import('@/views/Layout/Dashboard.vue')
 const Home = () => import('@/views/Content/Home.vue')
@@ -21,11 +19,11 @@ const routes = [
         name: 'Login',
         component: Login
     },
-    {
-        path: '/signup',
-        name: 'SignUp',
-        component: SignUp
-    },
+    // {
+    //     path: '/signup',
+    //     name: 'SignUp',
+    //     component: SignUp
+    // },
     {
         path: '/dashboard',
         name: 'Dashboard',
@@ -59,5 +57,19 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
+
+// Navigation guard to lock dashboard before login
+router.beforeEach((to, from, next) => {
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!jwtToken) {
+            next({ name: 'Login' });
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
 
 export default router

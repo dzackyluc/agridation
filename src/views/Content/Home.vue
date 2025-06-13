@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-col w-full max-w-6xl p-4">
+        <!-- <div class="flex flex-col w-full max-w-6xl p-4">
             <div class="card card-border bg-base-200">
                 <div class="card-body">
                     <h2 class="text-green-300 text-2xl mb-4">Submissions Timeline</h2>
@@ -191,7 +191,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -205,7 +205,7 @@ const seconds = ref(0);
 let countdownInterval = null;
 
 onMounted(() => {
-    const endDate = new Date('2025-06-01T00:00:00Z'); // Set your end date here
+    const endDate = new Date('2025-06-15T00:00:00Z'); // Set your end date here
     const updateCountdown = () => {
         const now = new Date();
         const diff = endDate - now;

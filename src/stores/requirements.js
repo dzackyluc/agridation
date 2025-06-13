@@ -12,15 +12,15 @@ export const useRequirementStore = defineStore('requirement', {
       this.loading = true;
       this.error = null;
       try {
+        const token = localStorage.getItem('jwtToken');
         const res = await axios.get(
           'https://api.agridation.com/api/panitia/users/getFileRequirements',
           {
             headers: {
-              Authorization: `bearer 7|DHxW4jqRHSPlBsBPYX7PYUaxvYcScn6my3nuCGUp24ff044c`
+              Authorization: `Bearer ${token}`
             }
           }
         );
-        // Adjust if your API response structure is different
         this.requirements = res.data.data.requirements;
       } catch (err) {
         this.error = err;
@@ -33,6 +33,7 @@ export const useRequirementStore = defineStore('requirement', {
       if (!req) return;
 
       try {
+        const token = localStorage.getItem('jwtToken');
         await axios.post(
           `https://api.agridation.com/api/panitia/users/${user_id}/verify/${requirement_id}`,
           {
@@ -41,7 +42,7 @@ export const useRequirementStore = defineStore('requirement', {
           },
           {
             headers: {
-              Authorization: `bearer 7|DHxW4jqRHSPlBsBPYX7PYUaxvYcScn6my3nuCGUp24ff044c`
+              Authorization: `Bearer ${token}`
             }
           }
         ).then((response) => {

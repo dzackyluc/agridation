@@ -12,9 +12,10 @@ export const useTeamTransactionStore = defineStore('transaction', {
       this.loading = true;
       this.error = null;
       try {
+        const token = localStorage.getItem('jwtToken');
         const res = await axios.get('https://api.agridation.com/api/transactions', {
           headers: {
-            Authorization: `bearer 7|DHxW4jqRHSPlBsBPYX7PYUaxvYcScn6my3nuCGUp24ff044c`
+            Authorization: `Bearer ${token}`
           }
         });
         this.transactions = res.data.data;
@@ -26,15 +27,16 @@ export const useTeamTransactionStore = defineStore('transaction', {
     },
     async updateTransactionStatus(id, status, reason = null) {
       try {
-        await axios.post(
-          `https://api.agridation.com/api/panitia/transactions/${id}/verify`,
+        const token = localStorage.getItem('jwtToken');
+        await axios.put(
+          `https://api.agridation.com/api/transactions/verif/${id}`,
           {
-            action: status === 'verified' ? 'approved' : 'rejected',
-            reason: reason,
+            action: status,
+            rejection_reason: reason,
           },
           {
             headers: {
-              Authorization: `bearer 7|DHxW4jqRHSPlBsBPYX7PYUaxvYcScn6my3nuCGUp24ff044c`
+              Authorization: `Bearer ${token}`
             }
           }
         );
