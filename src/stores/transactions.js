@@ -31,7 +31,7 @@ export const useTeamTransactionStore = defineStore('transaction', {
         await axios.put(
           `https://api.agridation.com/api/transactions/verif/${id}`,
           {
-            action: status,
+            status: status,
             rejection_reason: reason,
           },
           {
