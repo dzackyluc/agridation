@@ -58,6 +58,10 @@
                   >
                 </div>
               </div>
+              <!-- Error message display -->
+              <div v-if="errorMessage" class="mb-4 text-red-500 text-sm">
+                {{ errorMessage }}
+              </div>
               <form @submit.prevent="handleSubmit">
                 <div class="space-y-5">
                   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -261,7 +265,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
@@ -271,19 +275,31 @@ const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const agreeToTerms = ref(false)
+const errorMessage = ref('')
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
 
 const handleSubmit = () => {
-  // Implement form submission logic here
-  console.log('Form submitted', {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    email: email.value,
-    password: password.value,
-    agreeToTerms: agreeToTerms.value,
-  })
+  errorMessage.value = ''
+  try {
+    if (!firstName.value || !lastName.value || !email.value || !password.value) {
+      throw new Error('Please fill in all required fields.')
+    }
+    if (!agreeToTerms.value) {
+      throw new Error('You must agree to the Terms and Conditions.')
+    }
+    // Implement form submission logic here
+    console.log('Form submitted', {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      email: email.value,
+      password: password.value,
+      agreeToTerms: agreeToTerms.value,
+    })
+  } catch (e) {
+    errorMessage.value = e.message || 'An unexpected error occurred.'
+  }
 }
 </script>
